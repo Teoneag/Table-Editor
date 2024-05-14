@@ -132,13 +132,12 @@ Chronological order. Planned time -> actual time
   - https://github.com/japplis/Joeffice
   - use JTable
 - Sketch UI: 10m -> 11m
-- UI in Swing: 30m
-  - escape the "," from a cell
+- UI in Swing: 30m -> 2:30h
 - Formula parser & evaluator: 3h
 - test, fix & write tests: 3h
 - bonus: multiple cells: 1h
 - style: 1h
-- final testing: 1h
+- final testing + fix todos: 1h
 - documentation & push: 30m
 
 ## ToDo

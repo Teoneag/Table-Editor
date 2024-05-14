@@ -1,6 +1,8 @@
 package com.teoneag;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -16,7 +18,7 @@ public class TableEditor extends JFrame {
     private File currentFile = null;
     private JTable table = null;
     private DefaultTableModel tableModel = null;
-    private boolean isSaved = true;
+    private boolean toSave = false;
 
     public TableEditor() {
         setTitle("Table Editor");
@@ -28,16 +30,12 @@ public class TableEditor extends JFrame {
         createMenuBar();
         createStatusBar();
         createNoTableMessage();
+
     }
 
     private void newTable(int rows, int cols) {
-        if (table != null) {
-            int result = JOptionPane.showConfirmDialog(this, "Do you want to save the current table?", "Save Table", JOptionPane.YES_NO_CANCEL_OPTION);
-            if (result == JOptionPane.YES_OPTION) {
-                saveTable();
-            } else if (result == JOptionPane.CANCEL_OPTION) {
-                return;
-            }
+        if (toSave) {
+            if (!askSaveCurrent()) return;
         }
 
         JTextField rowsField = createNumericTextField(5);
@@ -55,7 +53,16 @@ public class TableEditor extends JFrame {
             try {
                 tableModel = new DefaultTableModel(Integer.parseInt(rowsField.getText()), Integer.parseInt(colsField.getText()));
                 table = new JTable(tableModel);
+                tableModel.addTableModelListener(new TableModelListener() {
+                    @Override
+                    public void tableChanged(TableModelEvent e) {
+                        toSave = true;
+                        statusBar.setText("Table modified. Please save to keep changes.");
+                    }
+                });
                 displayOnCenter(new JScrollPane(table));
+                toSave = true;
+                statusBar.setText("New table created with " + rowsField.getText() + " rows and " + colsField.getText() + " columns. Please save to keep changes.");
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Please enter valid numbers.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
                 newTable(rows, cols);
@@ -64,7 +71,43 @@ public class TableEditor extends JFrame {
     }
 
     private void openTable() {
-        // ToDo
+        if (toSave) {
+            if (!askSaveCurrent()) return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            currentFile = fileChooser.getSelectedFile();
+            try {
+                tableModel = new DefaultTableModel();
+                table = new JTable(tableModel);
+                tableModel.setRowCount(0);
+                tableModel.setColumnCount(0);
+
+                String line;
+                try (java.util.Scanner scanner = new java.util.Scanner(currentFile)) {
+                    if (scanner.hasNextLine()) {
+                        line = scanner.nextLine();
+                        String[] columns = line.split(",");
+                        for (String column : columns) {
+                            tableModel.addColumn(column);
+                        }
+                    }
+
+                    while (scanner.hasNextLine()) {
+                        line = scanner.nextLine();
+                        String[] values = line.split(",");
+                        tableModel.addRow(values);
+                    }
+                }
+
+                displayOnCenter(new JScrollPane(table));
+                toSave = false;
+                statusBar.setText("Opened successfully from " + currentFile.getAbsolutePath());
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "An error occurred while opening the file.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private void saveTable() {
@@ -87,10 +130,12 @@ public class TableEditor extends JFrame {
             if (!currentFile.getName().endsWith(".csv")) currentFile = new File(currentFile.getAbsolutePath() + ".csv");
             saveTableAsCSV();
         }
-        isSaved = true;
     }
 
     private void exit() {
+        if (toSave) {
+            if (!askSaveCurrent()) return;
+        }
         System.exit(0);
     }
 
@@ -138,6 +183,18 @@ public class TableEditor extends JFrame {
         JOptionPane.showMessageDialog(this, "No table to save. Create or open one first.", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * @return true if cancel otherwise false
+     */
+    private boolean askSaveCurrent() {
+        int result = JOptionPane.showConfirmDialog(this, "Do you want to save the current table?", "Save Table", JOptionPane.YES_NO_CANCEL_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+            saveTable();
+            return true;
+        }
+        return result != JOptionPane.CANCEL_OPTION;
+    }
+
     private void saveTableAsCSV() {
         // ToDo check if the cell contains "," and do smth
         try (FileWriter fileWriter = new FileWriter(currentFile)) {
@@ -157,6 +214,7 @@ public class TableEditor extends JFrame {
             }
 
             statusBar.setText("Saved successfully to " + currentFile.getAbsolutePath());
+            toSave = false;
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "An error occurred while saving the file.", "Error", JOptionPane.ERROR_MESSAGE);
         }
