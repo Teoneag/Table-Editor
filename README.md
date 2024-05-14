@@ -93,8 +93,9 @@ pow(-2, A1 - 3) * (42 + B2)
 ## Plan -> Actual: 
 
 Chronological order. Planned time -> actual time
-- read + make initial plan: 30m
-- swing example from GeeksForGeeks: 20m
+- read + make initial plan: 30m -> 34m
+- swing example from GeeksForGeeks: 20m -> 5m
+- read similar projects: 20m
 
 ## ToDo
 
