@@ -61,6 +61,39 @@ Or you can use IntelliJ IDEA to run it. (open the project and run the Main class
 
 ```
 
+## Design choices
+
+- Save data: CSV
+- UI
+  - AppBar
+    - File
+      - New
+        - Select rows and columns
+      - Open
+      - Save
+      - Save As
+      - Exit
+    - Edit
+      - Undo
+      - Redo
+      - Cut
+      - Copy
+      - Paste
+    - Table
+      - Insert Row
+      - Insert Column
+      - Delete Row
+      - Delete Column
+    - Help
+      - About
+  - Table
+    - Show all saved ros and columns
+    - Before any row, column: "-" button to delete
+    - Between any row, column: "+" button to insert
+    - See the result of any cell, when selected show the formula
+    - If it's between "" it's text, otherwise it's a formula
+    - If the formula is invalid, show an error message as a pop-up
+
 ## Task
 
 Write a table editor with formula support.
@@ -95,11 +128,23 @@ pow(-2, A1 - 3) * (42 + B2)
 Chronological order. Planned time -> actual time
 - read + make initial plan: 30m -> 34m
 - swing example from GeeksForGeeks: 20m -> 5m
-- read similar projects: 20m
+- read similar projects: 20m -> 21m
+  - https://github.com/japplis/Joeffice
+  - use JTable
+- Sketch UI: 10m -> 11m
+- UI in Swing: 30m
+  - escape the "," from a cell
+- Formula parser & evaluator: 3h
+- test, fix & write tests: 3h
+- bonus: multiple cells: 1h
+- style: 1h
+- final testing: 1h
+- documentation & push: 30m
 
 ## ToDo
 
 - GitHub description
+- icon
 
 ### Refactor
 
@@ -111,4 +156,4 @@ Chronological order. Planned time -> actual time
 
 ### Features
 
-- 
+- import, export to excel
