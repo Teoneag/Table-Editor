@@ -145,6 +145,7 @@ Chronological order. Planned time -> actual time
 
 - GitHub description
 - icon
+- shortcuts
 
 ### Refactor
 
