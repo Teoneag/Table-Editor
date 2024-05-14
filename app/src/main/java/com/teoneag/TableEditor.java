@@ -1,5 +1,8 @@
 package com.teoneag;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -9,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -30,7 +34,6 @@ public class TableEditor extends JFrame {
         createMenuBar();
         createStatusBar();
         createNoTableMessage();
-
     }
 
     private void newTable(int rows, int cols) {
@@ -78,26 +81,23 @@ public class TableEditor extends JFrame {
         JFileChooser fileChooser = new JFileChooser();
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             currentFile = fileChooser.getSelectedFile();
-            try {
-                tableModel = new DefaultTableModel();
-                table = new JTable(tableModel);
-                tableModel.setRowCount(0);
-                tableModel.setColumnCount(0);
+            tableModel = new DefaultTableModel();
+            table = new JTable(tableModel);
+            tableModel.setRowCount(0);
+            tableModel.setColumnCount(0);
 
-                String line;
-                try (java.util.Scanner scanner = new java.util.Scanner(currentFile)) {
-                    if (scanner.hasNextLine()) {
-                        line = scanner.nextLine();
-                        String[] columns = line.split(",");
-                        for (String column : columns) {
+            try (CSVReader reader = new CSVReader(new FileReader(currentFile))) {
+                String[] nextLine;
+                boolean isFirstLine = true;
+
+                while ((nextLine = reader.readNext()) != null) {
+                    if (isFirstLine) {
+                        for (String column : nextLine) {
                             tableModel.addColumn(column);
                         }
-                    }
-
-                    while (scanner.hasNextLine()) {
-                        line = scanner.nextLine();
-                        String[] values = line.split(",");
-                        tableModel.addRow(values);
+                        isFirstLine = false;
+                    } else {
+                        tableModel.addRow(nextLine);
                     }
                 }
 
@@ -105,7 +105,7 @@ public class TableEditor extends JFrame {
                 toSave = false;
                 statusBar.setText("Opened successfully from " + currentFile.getAbsolutePath());
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "An error occurred while opening the file.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error opening file", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -196,27 +196,28 @@ public class TableEditor extends JFrame {
     }
 
     private void saveTableAsCSV() {
-        // ToDo check if the cell contains "," and do smth
-        try (FileWriter fileWriter = new FileWriter(currentFile)) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(currentFile))) {
             // Write the column names
+            String[] columnNames = new String[tableModel.getColumnCount()];
             for (int i = 0; i < tableModel.getColumnCount(); i++) {
-                fileWriter.write(tableModel.getColumnName(i) + ",");
+                columnNames[i] = tableModel.getColumnName(i);
             }
-            fileWriter.write("\n");
+            writer.writeNext(columnNames);
 
             // Write the rows
             for (int i = 0; i < tableModel.getRowCount(); i++) {
+                String[] rowData = new String[tableModel.getColumnCount()];
                 for (int j = 0; j < tableModel.getColumnCount(); j++) {
-                    if (tableModel.getValueAt(i, j) == null) fileWriter.write(",");
-                    else fileWriter.write(tableModel.getValueAt(i, j).toString() + ",");
+                    Object cellValue = tableModel.getValueAt(i, j);
+                    rowData[j] = cellValue == null ? "" : cellValue.toString();
                 }
-                fileWriter.write("\n");
+                writer.writeNext(rowData, false);
             }
 
             statusBar.setText("Saved successfully to " + currentFile.getAbsolutePath());
             toSave = false;
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "An error occurred while saving the file.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error saving file", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

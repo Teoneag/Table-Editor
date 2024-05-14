@@ -13,6 +13,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     implementation(libs.guava)
+    implementation("com.opencsv:opencsv:3.7")
 }
 
 java {

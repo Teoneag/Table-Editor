@@ -94,6 +94,13 @@ Or you can use IntelliJ IDEA to run it. (open the project and run the Main class
     - If it's between "" it's text, otherwise it's a formula
     - If the formula is invalid, show an error message as a pop-up
 
+- Supported syntactic constructs:
+  - Parentheses: ()
+  - Binary operators: +, -, *, /, ^
+  - Unary operators: - (negation)
+  - Named functions: sqrt, sum (>= 2 arguments)
+  - References to table cells: A1, B2, C3, ...
+
 ## Task
 
 Write a table editor with formula support.
@@ -130,10 +137,11 @@ Chronological order. Planned time -> actual time
 - swing example from GeeksForGeeks: 20m -> 5m
 - read similar projects: 20m -> 21m
   - https://github.com/japplis/Joeffice
-  - use JTable
 - Sketch UI: 10m -> 11m
 - UI in Swing: 30m -> 2:30h
 - Formula parser & evaluator: 3h
+  - https://en.wikipedia.org/wiki/Shunting_yard_algorithm
+  - fix comma in cell: 10m -> 20m
 - test, fix & write tests: 3h
 - bonus: multiple cells: 1h
 - style: 1h
