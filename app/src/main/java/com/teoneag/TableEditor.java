@@ -2,6 +2,7 @@ package com.teoneag;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.teoneag.tokenizer.Tokenizer;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -61,6 +62,8 @@ public class TableEditor extends JFrame {
                     public void tableChanged(TableModelEvent e) {
                         toSave = true;
                         statusBar.setText("Table modified. Please save to keep changes.");
+                        String value = tableModel.getValueAt(e.getFirstRow(), e.getColumn()).toString();
+                        System.out.println("Tokens: " + Tokenizer.tokenize(value));
                     }
                 });
                 displayOnCenter(new JScrollPane(table));

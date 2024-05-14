@@ -93,13 +93,17 @@ Or you can use IntelliJ IDEA to run it. (open the project and run the Main class
     - See the result of any cell, when selected show the formula
     - If it's between "" it's text, otherwise it's a formula
     - If the formula is invalid, show an error message as a pop-up
-
 - Supported syntactic constructs:
   - Parentheses: ()
   - Binary operators: +, -, *, /, ^
   - Unary operators: - (negation)
   - Named functions: sqrt, sum (>= 2 arguments)
   - References to table cells: A1, B2, C3, ...
+- For decimal numbers use comma: 1,5
+- calculating equation
+  - tokenizer
+  - parser
+  - evaluator
 
 ## Task
 
@@ -139,7 +143,7 @@ Chronological order. Planned time -> actual time
   - https://github.com/japplis/Joeffice
 - Sketch UI: 10m -> 11m
 - UI in Swing: 30m -> 2:30h
-- Formula parser & evaluator: 3h
+- Formula parser & evaluator: 3h -> 1h + ?
   - https://en.wikipedia.org/wiki/Shunting_yard_algorithm
   - fix comma in cell: 10m -> 20m
 - test, fix & write tests: 3h
