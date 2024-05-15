@@ -13,6 +13,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -49,13 +50,18 @@ public class TableEditor extends JFrame {
         createNoTableMessage();
     }
 
+    private void newTable() {
+        newTable(30, 5);
+        // ToDo fix these magic numbers
+    }
+
     private void newTable(int rows, int cols) {
         if (toSave) {
             if (!askSaveCurrent()) return;
         }
 
-        JTextField rowsField = createNumericTextField(5);
-        JTextField colsField = createNumericTextField(5);
+        JTextField rowsField = createNumericTextField(40);
+        JTextField colsField = createNumericTextField(40);
 
         JPanel panel = new JPanel();
         panel.add(new JLabel("Number of rows:"));
@@ -85,12 +91,12 @@ public class TableEditor extends JFrame {
                     public boolean editCellAt(int row, int column, EventObject e) {
                         boolean isEditable = super.editCellAt(row, column, e);
                         if (isEditable && e instanceof MouseEvent) {
-                            // Show formula in the editor
                             ((JTextComponent) getEditorComponent()).setText(tableModel.getFormulaAt(row, column));
                         }
                         return isEditable;
                     }
                 };
+
                 sheet = new ArrayList<>(rows);
                 for (int i = 0; i < rows; i++) {
                     List<Double> innerList = new ArrayList<>(Collections.nCopies(cols, null));
@@ -103,7 +109,10 @@ public class TableEditor extends JFrame {
                         statusBar.setText("Table modified. Save to keep changes.");
                     }
                 });
-                displayOnCenter(new JScrollPane(table));
+                table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                scrollPane.setRowHeaderView(new TableRowHeader(table));
+                displayOnFull(scrollPane);
                 toSave = true;
                 statusBar.setText("New table created with " + rowsField.getText() + " rows and " + colsField.getText() + " columns. Save to keep changes.");
             } catch (NumberFormatException e) {
@@ -290,7 +299,7 @@ public class TableEditor extends JFrame {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
-        addMenuItem(fileMenu, "New", e -> newTable(5, 5));
+        addMenuItem(fileMenu, "New", e -> newTable());
         addMenuItem(fileMenu, "Open", e -> openTable());
         addMenuItem(fileMenu, "Save", e -> saveTable());
         addMenuItem(fileMenu, "Save As", e -> saveAsTable());
@@ -322,7 +331,7 @@ public class TableEditor extends JFrame {
     private void createNoTableMessage() {
         JLabel label = new JLabel("No table opened, create a ");
         JButton newButton = new JButton("new");
-        newButton.addActionListener(e -> newTable(5, 5));
+        newButton.addActionListener(e -> newTable());
         JLabel label2 = new JLabel(" table or ");
         JButton openButton = new JButton("open");
         openButton.addActionListener(e -> openTable());
@@ -343,6 +352,13 @@ public class TableEditor extends JFrame {
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.add(component);
         mainContent.add(centerPanel, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
+
+    private void displayOnFull(Component component) {
+        mainContent.removeAll();
+        mainContent.add(component, BorderLayout.CENTER);
         revalidate();
         repaint();
     }

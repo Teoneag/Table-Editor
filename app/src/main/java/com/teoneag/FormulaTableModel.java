@@ -151,7 +151,6 @@ public class FormulaTableModel extends AbstractTableModel {
         row++;
         return cellName.toString() + row;
     }
-
 }
 
 class FormulaCellEditor extends AbstractCellEditor implements TableCellEditor {

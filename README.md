@@ -147,10 +147,13 @@ Chronological order. Planned time -> actual time
   - https://en.wikipedia.org/wiki/Shunting_yard_algorithm
   - fix comma in cell: 10m -> 20m
   - https://www.geeksforgeeks.org/expression-evaluation/
-- test, fix & write tests: 3h
+- test, fix & write tests: 3h -> 1h + ?
   - allow strings in cells, fix empty cell: 13m
   - make formulas auto update: 20m
   - not happened: fix infinite recursion if happens (a=b, b=a)
+  - make table full screen: 1m
+  - show row numbers: 20m
+    - https://stackoverflow.com/questions/64867515/how-to-add-row-header-in-table
 - bonus: multiple cells: 1h
 - style: 1h
 - final testing + fix todos: 1h
@@ -158,10 +161,12 @@ Chronological order. Planned time -> actual time
 
 ## ToDo
 
+- make open file work
+- when editing a cell, if you click on another cell, add that string to the current cell
 - resize (add, remove cols)
 - GitHub description
 - icon
-- shortcuts
+- shortcuts (pressing esc on a cell should cancel the edit)
 
 ### Refactor
 
