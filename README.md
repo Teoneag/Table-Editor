@@ -154,6 +154,7 @@ Chronological order. Planned time -> actual time
   - show row numbers: 20m
     - https://stackoverflow.com/questions/64867515/how-to-add-row-header-in-table
   - make open file work: 1:10h
+  - refactor: 34m
 - bonus: multiple cells: 1h
 - style: 1h
 - final testing + fix todos: 1h

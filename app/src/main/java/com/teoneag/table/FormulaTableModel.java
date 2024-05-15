@@ -1,12 +1,9 @@
 package com.teoneag.table;
 
-import com.teoneag.Evaluator;
+import com.teoneag.formula.Evaluator;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 

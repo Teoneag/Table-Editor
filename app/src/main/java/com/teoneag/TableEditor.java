@@ -181,7 +181,6 @@ public class TableEditor extends JFrame {
             toSave = true;
             statusBar.setText("Table modified. Save to keep changes.");
         });
-
         JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setRowHeaderView(new TableRowHeader(table));
         displayOnFull(scrollPane);

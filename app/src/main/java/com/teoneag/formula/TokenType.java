@@ -1,9 +1,9 @@
-package com.teoneag.tokenizer;
+package com.teoneag.formula;
 
-import com.teoneag.computables.BinaryOperator;
-import com.teoneag.computables.Computable;
-import com.teoneag.computables.NamedFunction;
-import com.teoneag.computables.UnaryOperator;
+import com.teoneag.formula.computables.BinaryOperator;
+import com.teoneag.formula.computables.Computable;
+import com.teoneag.formula.computables.NamedFunction;
+import com.teoneag.formula.computables.UnaryOperator;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -31,11 +31,10 @@ public enum TokenType {
 
     public static <E extends Enum<E> & Computable> String getRegex(Class<E> enumClass) {
         return Arrays.stream(enumClass.getEnumConstants())
-            .map(e -> escapeRegex(e.getSymbol()))
+            .map(e -> Pattern.quote(e.getSymbol()))
             .collect(Collectors.joining("|"));
     }
+}
 
-    private static String escapeRegex(String symbol) {
-        return symbol.replaceAll("([\\Q\\*+?[](){}|.^$-\\E])", "\\\\$1");
-    }
+record Token(TokenType type, String value) {
 }

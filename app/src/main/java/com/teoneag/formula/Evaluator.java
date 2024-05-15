@@ -1,9 +1,6 @@
-package com.teoneag;
+package com.teoneag.formula;
 
-import com.teoneag.parser.Node;
-import com.teoneag.parser.Parser;
 import com.teoneag.table.FormulaTableModel;
-import com.teoneag.tokenizer.Tokenizer;
 
 import java.util.List;
 import java.util.ArrayList;

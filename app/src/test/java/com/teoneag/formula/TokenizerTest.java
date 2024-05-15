@@ -1,5 +1,8 @@
-package com.teoneag.tokenizer;
+package com.teoneag.formula;
 
+import com.teoneag.formula.Token;
+import com.teoneag.formula.TokenType;
+import com.teoneag.formula.Tokenizer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

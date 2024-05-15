@@ -1,10 +1,10 @@
-package com.teoneag.tokenizer;
+package com.teoneag.formula;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-public class Tokenizer {
+class Tokenizer {
     public static List<Token> tokenize(String input) {
         input = input.replaceAll("\\s+", "");
         List<Token> tokens = new ArrayList<>();
@@ -42,7 +42,7 @@ public class Tokenizer {
     }
 
     private static boolean isPreviousTokenOperatorOrLeftParen(List<Token> tokens) {
-        TokenType type = tokens.getLast().getType();
+        TokenType type = tokens.getLast().type();
         return type == TokenType.BINARY_OPERATOR || type == TokenType.UNARY_OPERATOR || type == TokenType.LEFT_PAREN;
     }
 }
