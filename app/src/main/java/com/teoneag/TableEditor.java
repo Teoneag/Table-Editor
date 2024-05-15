@@ -2,6 +2,8 @@ package com.teoneag;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.teoneag.parser.Node;
+import com.teoneag.parser.Parser;
 import com.teoneag.tokenizer.Token;
 import com.teoneag.tokenizer.Tokenizer;
 
@@ -9,16 +11,21 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EventObject;
 import java.util.List;
 
 public class TableEditor extends JFrame {
@@ -26,7 +33,7 @@ public class TableEditor extends JFrame {
     private final JLabel statusBar = new JLabel("Ready");
     private File currentFile = null;
     private JTable table = null;
-    private DefaultTableModel tableModel = null;
+    private FormulaTableModel tableModel = null;
     private boolean toSave = false;
     private List<List<Double>> sheet;
 
@@ -62,8 +69,28 @@ public class TableEditor extends JFrame {
             try {
                 int nrows = Integer.parseInt(rowsField.getText());
                 int ncols = Integer.parseInt(colsField.getText());
-                tableModel = new DefaultTableModel(nrows, ncols);
-                table = new JTable(tableModel);
+                tableModel = new FormulaTableModel(nrows, ncols);
+                table = new JTable(tableModel) {
+                    @Override
+                    public TableCellRenderer getCellRenderer(int row, int column) {
+                        return new FormulaCellRenderer();
+                    }
+
+                    @Override
+                    public TableCellEditor getCellEditor(int row, int column) {
+                        return new FormulaCellEditor();
+                    }
+
+                    @Override
+                    public boolean editCellAt(int row, int column, EventObject e) {
+                        boolean isEditable = super.editCellAt(row, column, e);
+                        if (isEditable && e instanceof MouseEvent) {
+                            // Show formula in the editor
+                            ((JTextComponent) getEditorComponent()).setText(tableModel.getFormulaAt(row, column));
+                        }
+                        return isEditable;
+                    }
+                };
                 sheet = new ArrayList<>(rows);
                 for (int i = 0; i < rows; i++) {
                     List<Double> innerList = new ArrayList<>(Collections.nCopies(cols, null));
@@ -74,15 +101,6 @@ public class TableEditor extends JFrame {
                     public void tableChanged(TableModelEvent e) {
                         toSave = true;
                         statusBar.setText("Table modified. Save to keep changes.");
-                        String value = tableModel.getValueAt(e.getFirstRow(), e.getColumn()).toString();
-                        List<Token> tokens = Tokenizer.tokenize(value);
-                        System.out.println("Tokens: " + tokens);
-                        Node node = Parser.parse(tokens, sheet);
-                        System.out.println("Node: " + node);
-
-                        int row = e.getFirstRow();
-                        int col = e.getColumn();
-
                     }
                 });
                 displayOnCenter(new JScrollPane(table));
@@ -103,44 +121,45 @@ public class TableEditor extends JFrame {
         JFileChooser fileChooser = new JFileChooser();
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             currentFile = fileChooser.getSelectedFile();
-            tableModel = new DefaultTableModel();
-            table = new JTable(tableModel);
-            tableModel.setRowCount(0);
-            tableModel.setColumnCount(0);
+//            tableModel = new DefaultTableModel();
+//            table = new JTable(tableModel);
+//            tableModel.setRowCount(0);
+//            tableModel.setColumnCount(0);
 
-            try (CSVReader reader = new CSVReader(new FileReader(currentFile))) {
-                String[] nextLine;
-                boolean isFirstLine = true;
-
-                while ((nextLine = reader.readNext()) != null) {
-                    if (isFirstLine) {
-                        for (String column : nextLine) {
-                            tableModel.addColumn(column);
-                        }
-                        isFirstLine = false;
-                    } else {
-                        tableModel.addRow(nextLine);
-                    }
-                }
-
-                int nrows = tableModel.getRowCount();
-                int ncols = tableModel.getColumnCount();
-
-                sheet = new ArrayList<>(nrows);
-                for (int i = 0; i < nrows; i++) {
-                    sheet.add(new ArrayList<>(ncols));
-                    for (int j = 0; j < ncols; j++) {
-                        // ToDo
-//                        int value =
-                    }
-                }
-
-                displayOnCenter(new JScrollPane(table));
-                toSave = false;
-                statusBar.setText("Opened successfully from " + currentFile.getAbsolutePath());
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error opening file", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+//            try (CSVReader reader = new CSVReader(new FileReader(currentFile))) {
+//                String[] nextLine;
+//                boolean isFirstLine = true;
+//
+//                while ((nextLine = reader.readNext()) != null) {
+//                    if (isFirstLine) {
+//                        for (String column : nextLine) {
+//                            tableModel.addColumn(column);
+//                        }
+//                        isFirstLine = false;
+//                    } else {
+//                        tableModel.addRow(nextLine);
+//                    }
+//                }
+//
+//                int nrows = tableModel.getRowCount();
+//                int ncols = tableModel.getColumnCount();
+//
+//                sheet = new ArrayList<>(nrows);
+//                for (int i = 0; i < nrows; i++) {
+//                    sheet.add(new ArrayList<>(ncols));
+//                    for (int j = 0; j < ncols; j++) {
+//                        // ToDo
+////                        double value = Evaluator.evaluate(tableModel.getValueAt(i, j).toString(), sheet);
+////                        sheet.get(i).add(value);
+//                    }
+//                }
+//
+//                displayOnCenter(new JScrollPane(table));
+//                toSave = false;
+//                statusBar.setText("Opened successfully from " + currentFile.getAbsolutePath());
+//            } catch (IOException e) {
+//                JOptionPane.showMessageDialog(this, "Error opening file", "Error", JOptionPane.ERROR_MESSAGE);
+//            }
         }
     }
 

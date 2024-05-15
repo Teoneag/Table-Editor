@@ -1,9 +1,9 @@
 package com.teoneag.tokenizer;
 
-import com.teoneag.BinaryOperator;
-import com.teoneag.Computable;
-import com.teoneag.NamedFunction;
-import com.teoneag.UnaryOperator;
+import com.teoneag.computables.BinaryOperator;
+import com.teoneag.computables.Computable;
+import com.teoneag.computables.NamedFunction;
+import com.teoneag.computables.UnaryOperator;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;

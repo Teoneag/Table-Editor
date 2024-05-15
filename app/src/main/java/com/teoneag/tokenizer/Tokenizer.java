@@ -39,6 +39,7 @@ public class Tokenizer {
             }
         }
 
+        System.out.println("Tokens: " + tokens);
         return tokens;
     }
 

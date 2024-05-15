@@ -1,4 +1,4 @@
-package com.teoneag;
+package com.teoneag.computables;
 
 import java.util.List;
 

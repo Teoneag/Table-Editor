@@ -1,4 +1,6 @@
-package com.teoneag;
+package com.teoneag.parser;
+
+import com.teoneag.computables.Computable;
 
 import java.util.List;
 

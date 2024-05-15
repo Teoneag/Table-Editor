@@ -143,7 +143,7 @@ Chronological order. Planned time -> actual time
   - https://github.com/japplis/Joeffice
 - Sketch UI: 10m -> 11m
 - UI in Swing: 30m -> 2:30h
-- Formula parser & evaluator: 3h -> 4h + ?
+- Formula parser & evaluator: 3h -> 5h
   - https://en.wikipedia.org/wiki/Shunting_yard_algorithm
   - fix comma in cell: 10m -> 20m
   - https://www.geeksforgeeks.org/expression-evaluation/
@@ -155,6 +155,7 @@ Chronological order. Planned time -> actual time
 
 ## ToDo
 
+- allow strings in cells
 - resize (add, remove cols)
 - fix infinite recursion if happens (a=b, b=a)
 - GitHub description

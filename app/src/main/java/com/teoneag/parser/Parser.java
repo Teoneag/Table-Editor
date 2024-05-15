@@ -1,5 +1,9 @@
-package com.teoneag;
+package com.teoneag.parser;
 
+import com.teoneag.computables.BinaryOperator;
+import com.teoneag.computables.Computable;
+import com.teoneag.computables.NamedFunction;
+import com.teoneag.computables.UnaryOperator;
 import com.teoneag.tokenizer.Token;
 import com.teoneag.tokenizer.TokenType;
 
@@ -8,7 +12,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class Parser {
-    public static Node parse(List<Token> tokens, List<List<Double>> sheet) {
+    public static Node parse(List<Token> tokens, List<List<String>> sheet) {
         Stack<Node> values = new Stack<>();
         Stack<Token> ops = new Stack<>();
 
@@ -44,6 +48,7 @@ public class Parser {
             values.push(applyOp(ops.pop(), values));
         }
 
+        System.out.println("Parsed expression: " + values.peek());
         return values.pop();
     }
 
@@ -82,7 +87,7 @@ public class Parser {
         return false;
     }
 
-    private static double getCellValue(String cellReference, List<List<Double>> sheet) {
+    private static double getCellValue(String cellReference, List<List<String>> sheet) {
         // AB37 -> (37, 28)
         String letters = cellReference.replaceAll("\\d", "");
         String numbers = cellReference.replaceAll("\\D", "");
@@ -92,7 +97,8 @@ public class Parser {
         for (int i = 0; i < letters.length(); i++) {
             column = column * 26 + letters.charAt(i) - 'A' + 1;
         }
-        return sheet.get(row).get(column);
+        column--;
+        return Double.parseDouble(sheet.get(row).get(column));
     }
 }
 
