@@ -11,6 +11,10 @@ public enum NamedFunction implements Computable {
     SUM("sum", args -> {
         if (args.size() < 2) throw new IllegalArgumentException("sum requires at least two arguments");
         return args.stream().reduce(0.0, Double::sum);
+    }),
+    POWER("pow", args -> {
+        if (args.size() != 2) throw new IllegalArgumentException("pow requires exactly two arguments");
+        return Math.pow(args.get(0), args.get(1));
     });
 
     private final String name;

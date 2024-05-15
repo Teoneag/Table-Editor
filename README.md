@@ -33,7 +33,12 @@ git clone https://github.com/Teoneag/Table-Editor
 
 ### 2. Build & run
 
-To build it run
+Tou can run it directly from gradle
+```bash
+./gradlew run
+```
+
+Or to build it run
 
 ```bash
 ./gradlew build
@@ -43,12 +48,6 @@ And then to run it run
 
 ```bash
 java -cp build/libs/Table-Editor-1.0-SNAPSHOT.jar com.teoneag.Main
-```
-
-Or you can run it directly from gradle (but IO is a bit slower)
-
-```bash
-./gradlew run -q --console=plain
 ```
 
 Or you can use IntelliJ IDEA to run it. (open the project and run the Main class)

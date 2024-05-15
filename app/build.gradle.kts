@@ -23,7 +23,7 @@ java {
 }
 
 application {
-    mainClass = "com.teoneag.App"
+    mainClass = "com.teoneag.TableEditor"
 }
 
 tasks.named<Test>("test") {
