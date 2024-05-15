@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Evaluator {
-    public static String evaluate(String expression, List<List<String>> sheet) {
-        return evaluate(Parser.parse(Tokenizer.tokenize(expression), sheet));
+    public static String evaluate(String expression, FormulaTableModel model) {
+        return evaluate(Parser.parse(Tokenizer.tokenize(expression), model));
     }
 
     private static String evaluate(Node node) {

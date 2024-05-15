@@ -35,11 +35,9 @@ public class Tokenizer {
             }
 
             if (!matched) {
-                throw new IllegalArgumentException("Invalid input at position: " + position);
+                throw new IllegalArgumentException("Unknown token: " + input.substring(position));
             }
         }
-
-        System.out.println("Tokens: " + tokens);
         return tokens;
     }
 

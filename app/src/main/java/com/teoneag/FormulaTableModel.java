@@ -48,6 +48,16 @@ public class FormulaTableModel extends AbstractTableModel {
         formulas.get(rowIndex).set(columnIndex, value);
         data.get(rowIndex).set(columnIndex, evaluateFormula(value));
         fireTableCellUpdated(rowIndex, columnIndex);
+
+        String cellName = getCellName(rowIndex, columnIndex);
+        for (int i = 0; i < formulas.size(); i++) {
+            for (int j = 0; j < formulas.getFirst().size(); j++) {
+                if (formulas.get(i).get(j).contains(cellName)) {
+                    data.get(i).set(j, evaluateFormula(formulas.get(i).get(j)));
+                    fireTableCellUpdated(i, j);
+                }
+            }
+        }
     }
 
     public String getFormulaAt(int rowIndex, int columnIndex) {
@@ -55,7 +65,17 @@ public class FormulaTableModel extends AbstractTableModel {
     }
 
     private String evaluateFormula(String formula) {
-        return Evaluator.evaluate(formula, data);
+        if (!formula.startsWith("=")) {
+            return formula;
+        }
+        try {
+            return Evaluator.evaluate(formula.replace("=", ""), this);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                "Error in formula syntax. If you don't want a formula, don't start with '='.\nEvaluating this: "
+                    + formula + ", you got this: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return "ERROR";
+        }
     }
 
     @Override
@@ -107,6 +127,31 @@ public class FormulaTableModel extends AbstractTableModel {
         }
         fireTableStructureChanged();
     }
+
+    public double getCellValue(String cellReference) {
+        // AB37 -> (37, 28)
+        String letters = cellReference.replaceAll("\\d", "");
+        String numbers = cellReference.replaceAll("\\D", "");
+
+        int row = Integer.parseInt(numbers) - 1;
+        int column = 0;
+        for (int i = 0; i < letters.length(); i++) {
+            column = column * 26 + letters.charAt(i) - 'A' + 1;
+        }
+        column--;
+        return Double.parseDouble(data.get(row).get(column));
+    }
+
+    private String getCellName(int row, int column) {
+        StringBuilder cellName = new StringBuilder();
+        while (column >= 0) {
+            cellName.insert(0, (char) (column % 26 + 'A'));
+            column = (column / 26) - 1;
+        }
+        row++;
+        return cellName.toString() + row;
+    }
+
 }
 
 class FormulaCellEditor extends AbstractCellEditor implements TableCellEditor {

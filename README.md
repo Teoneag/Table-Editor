@@ -148,6 +148,9 @@ Chronological order. Planned time -> actual time
   - fix comma in cell: 10m -> 20m
   - https://www.geeksforgeeks.org/expression-evaluation/
 - test, fix & write tests: 3h
+  - allow strings in cells, fix empty cell: 13m
+  - make formulas auto update: 20m
+  - not happened: fix infinite recursion if happens (a=b, b=a)
 - bonus: multiple cells: 1h
 - style: 1h
 - final testing + fix todos: 1h
@@ -155,9 +158,7 @@ Chronological order. Planned time -> actual time
 
 ## ToDo
 
-- allow strings in cells
 - resize (add, remove cols)
-- fix infinite recursion if happens (a=b, b=a)
 - GitHub description
 - icon
 - shortcuts
@@ -168,7 +169,7 @@ Chronological order. Planned time -> actual time
 
 ### Fix
 
-- 
+
 
 ### Features
 

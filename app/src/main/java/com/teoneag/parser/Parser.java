@@ -1,5 +1,6 @@
 package com.teoneag.parser;
 
+import com.teoneag.FormulaTableModel;
 import com.teoneag.computables.BinaryOperator;
 import com.teoneag.computables.Computable;
 import com.teoneag.computables.NamedFunction;
@@ -12,14 +13,14 @@ import java.util.List;
 import java.util.Stack;
 
 public class Parser {
-    public static Node parse(List<Token> tokens, List<List<String>> sheet) {
+    public static Node parse(List<Token> tokens, FormulaTableModel model) {
         Stack<Node> values = new Stack<>();
         Stack<Token> ops = new Stack<>();
 
         for (Token token : tokens) {
             switch (token.getType()) {
                 case NUMBER -> values.push(new NumberNode(token));
-                case CELL_REFERENCE -> values.push(new NumberNode(getCellValue(token.getValue(), sheet)));
+                case CELL_REFERENCE -> values.push(new NumberNode(model.getCellValue(token.getValue())));
                 case NAMED_FUNCTION, LEFT_PAREN -> ops.push(token);
                 case COMMA -> {
                     while (!ops.isEmpty() && ops.peek().getType() != TokenType.LEFT_PAREN) {
@@ -48,7 +49,9 @@ public class Parser {
             values.push(applyOp(ops.pop(), values));
         }
 
-        System.out.println("Parsed expression: " + values.peek());
+        if (values.size() != 1) {
+            throw new IllegalArgumentException("Expression is empty.");
+        }
         return values.pop();
     }
 
@@ -85,20 +88,6 @@ public class Parser {
             return op1Operator.getPrecedence() <= op2Operator.getPrecedence();
         }
         return false;
-    }
-
-    private static double getCellValue(String cellReference, List<List<String>> sheet) {
-        // AB37 -> (37, 28)
-        String letters = cellReference.replaceAll("\\d", "");
-        String numbers = cellReference.replaceAll("\\D", "");
-
-        int row = Integer.parseInt(numbers) - 1;
-        int column = 0;
-        for (int i = 0; i < letters.length(); i++) {
-            column = column * 26 + letters.charAt(i) - 'A' + 1;
-        }
-        column--;
-        return Double.parseDouble(sheet.get(row).get(column));
     }
 }
 
