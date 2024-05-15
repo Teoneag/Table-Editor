@@ -9,7 +9,7 @@
 </pre>
 <div align="right">
 
-**<font color="red">ToDo add description</font>**
+A simple table editor with formula support build in Java & Swing
 
 By [Teodor Neagoe](https://github.com/Teoneag)
 
@@ -19,11 +19,9 @@ By [Teodor Neagoe](https://github.com/Teoneag)
 
 ## Getting Started
 
-### Prerequisites
+### 0. Prerequisites
 
-- Os: Windows
-
-## Download
+- Java 21 or higher
 
 ### 1. Clone the repository
 
@@ -33,32 +31,51 @@ git clone https://github.com/Teoneag/Table-Editor
 
 ### 2. Build & run
 
-Tou can run it directly from gradle
+You can run it directly from gradle
 ```bash
 ./gradlew run
 ```
 
-Or to build it run
+Or alternatively, first build it
 
 ```bash
 ./gradlew build
 ```
 
-And then to run it run
+And then run it
 
 ```bash
-java -cp build/libs/Table-Editor-1.0-SNAPSHOT.jar com.teoneag.Main
+java -cp build/libs/TableEditor-1.0-SNAPSHOT.jar com.teoneag.Main
 ```
 
-Or you can use IntelliJ IDEA to run it. (open the project and run the Main class)
+Or you can use IntelliJ IDEA to run it. (open the project and run the TableEditor class)
 
-## Usage
+### 3. Enjoy!
 
-**<font color="red">ToDo add usage code</font>**
+<div style="font-size: 20px; color: red;">
+  <strong>⚠️ Don't forget to add <code>=</code> before the formula in the cell, just like in Excel! ⚠️</strong>
+</div>
 
-```java
+## Features
 
-```
+- file management
+  - create new table with custom size
+  - save table as CSV
+  - open table from CSV
+- table
+  - cells can hold
+    - normal text
+    - formulas
+      - the result of the formula is displayed
+      - just double click it to edit it and you can see the formula
+  - move columns
+- formulas
+  - Parentheses: ()
+  - Binary operators: +, -, *, /, %, ^
+  - Unary operators: - (negation)
+  - Named functions with variable nr of args: pow, sqrt, qbs, log, log10, exp, sin, cos, tan, min, max, sum, avg
+  - References to table cells: A1, ZZ3
+    - live formula update (when you change a cell, all cells that depend on it are updated)
 
 ## Design choices
 
@@ -94,9 +111,9 @@ Or you can use IntelliJ IDEA to run it. (open the project and run the Main class
     - If the formula is invalid, show an error message as a pop-up
 - Supported syntactic constructs:
   - Parentheses: ()
-  - Binary operators: +, -, *, /, ^
+  - Binary operators: +, -, *, /, %, ^
   - Unary operators: - (negation)
-  - Named functions with variable nr of args: sqrt, sum (>= 2 arguments)
+  - Named functions with variable nr of args: pow, sqrt, qbs, log, log10, exp, sin, cos, tan, min, max, sum, avg
   - References to table cells: A1, ZZ3
 - For decimal numbers use comma: 1,5
 - calculating equation
@@ -165,56 +182,14 @@ Chronological order. Planned time -> actual time
 - if trying to open invalide file, show its contents and suggest fix
 - when editing a cell, if you click on another cell, add that string to the current cell
 - resize (add, remove cols)
-- GitHub description
 - icon
 - shortcuts (pressing esc on a cell should cancel the edit)
 - implement the following
-  - Addition (+)
-    Subtraction (-)
-    Multiplication (*)
-    Division (/)
-    Modulus (%)
-    Exponentiation (^ or **)
-    Comparison (==, !=, <, >, <=, >=)
-    Logical AND (&&)
-    Logical OR (||)
-    Unary Operators:
-
-Unary plus (+)
-Unary minus (-)
-Logical NOT (!)
-Named Functions
-Mathematical Functions:
-
-pow(base, exponent) - Raises a number to the power of another.
-sqrt(value) - Computes the square root.
-abs(value) - Returns the absolute value.
-sin(angle) - Computes the sine of an angle (in radians).
-cos(angle) - Computes the cosine of an angle (in radians).
-tan(angle) - Computes the tangent of an angle (in radians).
-log(value) - Computes the natural logarithm.
-log10(value) - Computes the base-10 logarithm.
-exp(value) - Returns e raised to the power of a number.
-Statistical Functions:
-
-min(value1, value2, ...) - Returns the minimum value.
-max(value1, value2, ...) - Returns the maximum value.
-sum(value1, value2, ...) - Returns the sum of the values.
-avg(value1, value2, ...) - Returns the average of the values.
-count(value1, value2, ...) - Returns the count of the values.
-Utility Functions:
-
-if(condition, value_if_true, value_if_false) - Returns one of two values depending on the condition.
-concat(string1, string2, ...)
-
-### Refactor
-
-- 
-
-### Fix
-
-
-
-### Features
+  - Comparison (==, !=, <, >, <=, >=)
+  - Logical AND (&&)
+  - Logical OR (||) 
+  - Logical NOT (!)
+  - if(condition, value_if_true, value_if_false) - Returns one of two values depending on the condition.
+  - concat(string1, string2, ...)
 
 - import, export to excel

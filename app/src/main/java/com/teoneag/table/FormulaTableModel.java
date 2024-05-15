@@ -51,7 +51,8 @@ public class FormulaTableModel extends AbstractTableModel {
         String cellName = getCellName(rowIndex, columnIndex);
         for (int i = 0; i < formulas.size(); i++) {
             for (int j = 0; j < formulas.getFirst().size(); j++) {
-                if (formulas.get(i).get(j).contains(cellName)) {
+                if (formulas.get(i).get(j).toLowerCase().contains(cellName)) {
+                    System.out.println("Recalculating " + getCellName(i, j) + " because of " + cellName);
                     data.get(i).set(j, evaluateFormula(formulas.get(i).get(j)));
                     fireTableCellUpdated(i, j);
                 }
@@ -68,7 +69,7 @@ public class FormulaTableModel extends AbstractTableModel {
             return formula;
         }
         try {
-            return Evaluator.evaluate(formula.replace("=", ""), this);
+            return Evaluator.evaluate(formula.replace("=", "").toLowerCase(), this);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                 "Error in formula syntax. If you don't want a formula, don't start with '='.\nEvaluating this: "
@@ -128,14 +129,14 @@ public class FormulaTableModel extends AbstractTableModel {
     }
 
     public double getCellValue(String cellReference) {
-        // AB37 -> (37, 28)
+        // ab37 -> (37, 28)
         String letters = cellReference.replaceAll("\\d", "");
         String numbers = cellReference.replaceAll("\\D", "");
 
         int row = Integer.parseInt(numbers) - 1;
         int column = 0;
         for (int i = 0; i < letters.length(); i++) {
-            column = column * 26 + letters.charAt(i) - 'A' + 1;
+            column = column * 26 + letters.charAt(i) - 'a' + 1;
         }
         column--;
         return Double.parseDouble(data.get(row).get(column));
@@ -144,7 +145,7 @@ public class FormulaTableModel extends AbstractTableModel {
     private String getCellName(int row, int column) {
         StringBuilder cellName = new StringBuilder();
         while (column >= 0) {
-            cellName.insert(0, (char) (column % 26 + 'A'));
+            cellName.insert(0, (char) (column % 26 + 'a'));
             column = (column / 26) - 1;
         }
         row++;

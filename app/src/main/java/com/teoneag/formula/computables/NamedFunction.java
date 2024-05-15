@@ -4,14 +4,20 @@ import java.util.List;
 import java.util.function.Function;
 
 public enum NamedFunction implements Computable {
-    SQRT("sqrt", 1, args -> Math.sqrt(args.getFirst())),
-    SUM("sum", 2, args -> args.stream().reduce(0.0, Double::sum)),
     POWER("pow", 2, args -> Math.pow(args.getFirst(), args.get(1))),
+    SQRT("sqrt", 1, args -> Math.sqrt(args.getFirst())),
+    ABS("abs", 1, args -> Math.abs(args.getFirst())),
     LOG("log", 1, args -> Math.log(args.getFirst())),
+    LOG10("log10", 1, args -> Math.log10(args.getFirst())),
     EXP("exp", 1, args -> Math.exp(args.getFirst())),
     SIN("sin", 1, args -> Math.sin(args.getFirst())),
     COS("cos", 1, args -> Math.cos(args.getFirst())),
-    TAN("tan", 1, args -> Math.tan(args.getFirst()));
+    TAN("tan", 1, args -> Math.tan(args.getFirst())),
+    MIN("min", 2, args -> args.stream().min(Double::compare).orElseThrow()),
+    MAX("max", 2, args -> args.stream().max(Double::compare).orElseThrow()),
+    SUM("sum", 2, args -> args.stream().reduce(0.0, Double::sum)),
+    AVG("avg", 2, args -> args.stream().mapToDouble(Double::doubleValue).average().orElseThrow()),
+    COUNT("count", 1, args -> (double) args.size());
 
     private final String name;
     private final int argCount;

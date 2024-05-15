@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public enum TokenType {
     NUMBER("[0-9]+(\\.[0-9]+)?"),
-    CELL_REFERENCE("[A-Z]+[0-9]+"),
+    CELL_REFERENCE("[a-z]+[0-9]+"),
     UNARY_OPERATOR(getRegex(UnaryOperator.class)),
     BINARY_OPERATOR(getRegex(BinaryOperator.class)),
     NAMED_FUNCTION(getRegex(NamedFunction.class)),

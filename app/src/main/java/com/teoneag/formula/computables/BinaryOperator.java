@@ -11,6 +11,7 @@ public enum BinaryOperator implements Computable {
         if (b == 0) throw new ArithmeticException("Division by zero");
         return a / b;
     }),
+    REMAINDER("%", 2, (a, b) -> a % b),
     POWER("^", 3, Math::pow);
 
     private final String symbol;

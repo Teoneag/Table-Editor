@@ -91,7 +91,7 @@ public class TableEditor extends JFrame {
                 while ((nextLine = reader.readNext()) != null) {
                     tableModel.addRow();
                     for (int i = 0; i < nextLine.length; i++) {
-                        tableModel.setValueAt(nextLine[i], tableModel.getRowCount() - 1, i);
+                        tableModel.setValueAt(nextLine[i], tableModel.getRowCount() - 2, i);
                     }
                 }
 
