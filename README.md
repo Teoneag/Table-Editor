@@ -97,12 +97,12 @@ Or you can use IntelliJ IDEA to run it. (open the project and run the Main class
   - Parentheses: ()
   - Binary operators: +, -, *, /, ^
   - Unary operators: - (negation)
-  - Named functions: sqrt, sum (>= 2 arguments)
-  - References to table cells: A1, B2, C3, ...
+  - Named functions with variable nr of args: sqrt, sum (>= 2 arguments)
+  - References to table cells: A1, ZZ3
 - For decimal numbers use comma: 1,5
 - calculating equation
   - tokenizer
-  - parser
+  - parser AST
   - evaluator
 
 ## Task
@@ -143,9 +143,10 @@ Chronological order. Planned time -> actual time
   - https://github.com/japplis/Joeffice
 - Sketch UI: 10m -> 11m
 - UI in Swing: 30m -> 2:30h
-- Formula parser & evaluator: 3h -> 1h + ?
+- Formula parser & evaluator: 3h -> 4h + ?
   - https://en.wikipedia.org/wiki/Shunting_yard_algorithm
   - fix comma in cell: 10m -> 20m
+  - https://www.geeksforgeeks.org/expression-evaluation/
 - test, fix & write tests: 3h
 - bonus: multiple cells: 1h
 - style: 1h
@@ -154,6 +155,8 @@ Chronological order. Planned time -> actual time
 
 ## ToDo
 
+- resize (add, remove cols)
+- fix infinite recursion if happens (a=b, b=a)
 - GitHub description
 - icon
 - shortcuts

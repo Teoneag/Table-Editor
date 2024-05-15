@@ -9,14 +9,15 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-enum TokenType {
+public enum TokenType {
     NUMBER("[0-9]+(\\.[0-9]+)?"),
     CELL_REFERENCE("[A-Z]+[0-9]+"),
-    OPERATOR(String.join(getRegex(UnaryOperator.class), getRegex(BinaryOperator.class))),
+    UNARY_OPERATOR(getRegex(UnaryOperator.class)),
+    BINARY_OPERATOR(getRegex(BinaryOperator.class)),
     NAMED_FUNCTION(getRegex(NamedFunction.class)),
     COMMA(","),
-    LEFT_PARENTHESIS("\\("),
-    RIGHT_PARENTHESIS("\\)");
+    LEFT_PAREN("\\("),
+    RIGHT_PAREN("\\)");
 
     private final Pattern pattern;
 

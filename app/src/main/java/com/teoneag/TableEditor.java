@@ -2,6 +2,7 @@ package com.teoneag;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.teoneag.tokenizer.Token;
 import com.teoneag.tokenizer.Tokenizer;
 
 import javax.swing.*;
@@ -16,6 +17,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class TableEditor extends JFrame {
     private final JPanel mainContent = new JPanel(new BorderLayout());
@@ -24,6 +28,7 @@ public class TableEditor extends JFrame {
     private JTable table = null;
     private DefaultTableModel tableModel = null;
     private boolean toSave = false;
+    private List<List<Double>> sheet;
 
     public TableEditor() {
         setTitle("Table Editor");
@@ -55,22 +60,36 @@ public class TableEditor extends JFrame {
 
         if (result == JOptionPane.OK_OPTION) {
             try {
-                tableModel = new DefaultTableModel(Integer.parseInt(rowsField.getText()), Integer.parseInt(colsField.getText()));
+                int nrows = Integer.parseInt(rowsField.getText());
+                int ncols = Integer.parseInt(colsField.getText());
+                tableModel = new DefaultTableModel(nrows, ncols);
                 table = new JTable(tableModel);
+                sheet = new ArrayList<>(rows);
+                for (int i = 0; i < rows; i++) {
+                    List<Double> innerList = new ArrayList<>(Collections.nCopies(cols, null));
+                    sheet.add(innerList);
+                }
                 tableModel.addTableModelListener(new TableModelListener() {
                     @Override
                     public void tableChanged(TableModelEvent e) {
                         toSave = true;
-                        statusBar.setText("Table modified. Please save to keep changes.");
+                        statusBar.setText("Table modified. Save to keep changes.");
                         String value = tableModel.getValueAt(e.getFirstRow(), e.getColumn()).toString();
-                        System.out.println("Tokens: " + Tokenizer.tokenize(value));
+                        List<Token> tokens = Tokenizer.tokenize(value);
+                        System.out.println("Tokens: " + tokens);
+                        Node node = Parser.parse(tokens, sheet);
+                        System.out.println("Node: " + node);
+
+                        int row = e.getFirstRow();
+                        int col = e.getColumn();
+
                     }
                 });
                 displayOnCenter(new JScrollPane(table));
                 toSave = true;
-                statusBar.setText("New table created with " + rowsField.getText() + " rows and " + colsField.getText() + " columns. Please save to keep changes.");
+                statusBar.setText("New table created with " + rowsField.getText() + " rows and " + colsField.getText() + " columns. Save to keep changes.");
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Please enter valid numbers.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Enter valid numbers.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
                 newTable(rows, cols);
             }
         }
@@ -101,6 +120,18 @@ public class TableEditor extends JFrame {
                         isFirstLine = false;
                     } else {
                         tableModel.addRow(nextLine);
+                    }
+                }
+
+                int nrows = tableModel.getRowCount();
+                int ncols = tableModel.getColumnCount();
+
+                sheet = new ArrayList<>(nrows);
+                for (int i = 0; i < nrows; i++) {
+                    sheet.add(new ArrayList<>(ncols));
+                    for (int j = 0; j < ncols; j++) {
+                        // ToDo
+//                        int value =
                     }
                 }
 
@@ -270,7 +301,7 @@ public class TableEditor extends JFrame {
     }
 
     private void createNoTableMessage() {
-        JLabel label = new JLabel("No table opened, please create a ");
+        JLabel label = new JLabel("No table opened, create a ");
         JButton newButton = new JButton("new");
         newButton.addActionListener(e -> newTable(5, 5));
         JLabel label2 = new JLabel(" table or ");

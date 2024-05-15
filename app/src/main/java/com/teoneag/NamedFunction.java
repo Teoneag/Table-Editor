@@ -21,6 +21,15 @@ public enum NamedFunction implements Computable {
         this.operation = operation;
     }
 
+    public static NamedFunction fromSymbol(String symbol) {
+        for (NamedFunction function : values()) {
+            if (function.getSymbol().equals(symbol)) {
+                return function;
+            }
+        }
+        throw new IllegalArgumentException("Unknown named function: " + symbol);
+    }
+
     @Override
     public double compute(List<Double> args) {
         return operation.apply(args);

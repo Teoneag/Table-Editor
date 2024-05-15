@@ -3,7 +3,6 @@ package com.teoneag.tokenizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Tokenizer {
     public static List<Token> tokenize(String input) {
@@ -20,7 +19,15 @@ public class Tokenizer {
 
                 if (matcher.lookingAt()) {
                     String tokenValue = input.substring(position, matcher.end());
-                    tokens.add(new Token(type, tokenValue));
+                    if (tokenValue.equals("-")) {
+                        if (tokens.isEmpty() || isPreviousTokenOperatorOrLeftParen(tokens)) {
+                            tokens.add(new Token(TokenType.UNARY_OPERATOR, tokenValue));
+                        } else {
+                            tokens.add(new Token(TokenType.BINARY_OPERATOR, tokenValue));
+                        }
+                    } else {
+                        tokens.add(new Token(type, tokenValue));
+                    }
                     position = matcher.end();
                     matched = true;
                     break;
@@ -33,5 +40,10 @@ public class Tokenizer {
         }
 
         return tokens;
+    }
+
+    private static boolean isPreviousTokenOperatorOrLeftParen(List<Token> tokens) {
+        TokenType type = tokens.getLast().getType();
+        return type == TokenType.BINARY_OPERATOR || type == TokenType.UNARY_OPERATOR || type == TokenType.LEFT_PAREN;
     }
 }

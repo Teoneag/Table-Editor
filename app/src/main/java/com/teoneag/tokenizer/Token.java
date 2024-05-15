@@ -3,8 +3,6 @@ package com.teoneag.tokenizer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.Objects;
-
 public class Token {
     TokenType type;
     String value;
@@ -12,6 +10,14 @@ public class Token {
     Token(TokenType type, String value) {
         this.type = type;
         this.value = value;
+    }
+
+    public TokenType getType() {
+        return type;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     public String toString() {

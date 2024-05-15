@@ -14,6 +14,15 @@ public enum UnaryOperator implements Computable {
         this.operation = operation;
     }
 
+    public static UnaryOperator fromSymbol(String symbol) {
+        for (UnaryOperator operator : values()) {
+            if (operator.getSymbol().equals(symbol)) {
+                return operator;
+            }
+        }
+        throw new IllegalArgumentException("Unknown unary operator: " + symbol);
+    }
+
     @Override
     public double compute(List<Double> args) {
         if (args.size() != 1) throw new IllegalArgumentException("Unary operation requires exactly one argument.");

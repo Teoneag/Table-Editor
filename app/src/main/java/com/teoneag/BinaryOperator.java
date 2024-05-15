@@ -4,21 +4,32 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 public enum BinaryOperator implements Computable {
-    ADD("+", Double::sum),
-    SUBTRACT("-", (a, b) -> a - b),
-    MULTIPLY("*", (a, b) -> a * b),
-    DIVIDE("/", (a, b) -> {
+    ADD("+", 1, Double::sum),
+    SUBTRACT("-", 1, (a, b) -> a - b),
+    MULTIPLY("*", 2, (a, b) -> a * b),
+    DIVIDE("/", 2, (a, b) -> {
         if (b == 0) throw new ArithmeticException("Division by zero");
         return a / b;
     }),
-    POWER("^", Math::pow);
+    POWER("^", 3, Math::pow);
 
     private final String symbol;
+    private final int precedence;
     private final BiFunction<Double, Double, Double> operation;
 
-    BinaryOperator(String symbol, BiFunction<Double, Double, Double> operation) {
+    BinaryOperator(String symbol, int precedence, BiFunction<Double, Double, Double> operation) {
         this.symbol = symbol;
+        this.precedence = precedence;
         this.operation = operation;
+    }
+
+    public static BinaryOperator fromSymbol(String symbol) {
+        for (BinaryOperator operator : values()) {
+            if (operator.getSymbol().equals(symbol)) {
+                return operator;
+            }
+        }
+        throw new IllegalArgumentException("Unknown binary operator: " + symbol);
     }
 
     @Override
@@ -30,5 +41,9 @@ public enum BinaryOperator implements Computable {
     @Override
     public String getSymbol() {
         return symbol;
+    }
+
+    public int getPrecedence() {
+        return precedence;
     }
 }
