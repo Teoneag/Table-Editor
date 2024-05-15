@@ -1,4 +1,6 @@
-package com.teoneag;
+package com.teoneag.table;
+
+import com.teoneag.Evaluator;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -153,32 +155,3 @@ public class FormulaTableModel extends AbstractTableModel {
     }
 }
 
-class FormulaCellEditor extends AbstractCellEditor implements TableCellEditor {
-    private final JTextField textField;
-
-    public FormulaCellEditor() {
-        textField = new JTextField();
-    }
-
-    @Override
-    public Object getCellEditorValue() {
-        return textField.getText();
-    }
-
-    @Override
-    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        textField.setText((String) value);
-        return textField;
-    }
-}
-
-class FormulaCellRenderer extends DefaultTableCellRenderer {
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        if (value instanceof String) {
-            setText((String) value);
-        }
-        return c;
-    }
-}

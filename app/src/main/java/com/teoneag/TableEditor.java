@@ -2,32 +2,19 @@ package com.teoneag;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.teoneag.parser.Node;
-import com.teoneag.parser.Parser;
-import com.teoneag.tokenizer.Token;
-import com.teoneag.tokenizer.Tokenizer;
+import com.teoneag.table.FormulaTable;
+import com.teoneag.table.FormulaTableModel;
+import com.teoneag.table.TableRowHeader;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EventObject;
-import java.util.List;
 
 public class TableEditor extends JFrame {
     private final JPanel mainContent = new JPanel(new BorderLayout());
@@ -36,7 +23,6 @@ public class TableEditor extends JFrame {
     private JTable table = null;
     private FormulaTableModel tableModel = null;
     private boolean toSave = false;
-    private List<List<Double>> sheet;
 
     public TableEditor() {
         setTitle("Table Editor");
@@ -51,75 +37,43 @@ public class TableEditor extends JFrame {
     }
 
     private void newTable() {
-        newTable(30, 5);
-        // ToDo fix these magic numbers
-    }
-
-    private void newTable(int rows, int cols) {
         if (toSave) {
             if (!askSaveCurrent()) return;
         }
+        newTable(100, 100);
+    }
 
-        JTextField rowsField = createNumericTextField(40);
-        JTextField colsField = createNumericTextField(40);
-
+    private void newTable(int rows, int cols) {
+        JTextField rowsField = createNumericTextField(rows);
+        JTextField colsField = createNumericTextField(cols);
         JPanel panel = new JPanel();
         panel.add(new JLabel("Number of rows:"));
         panel.add(rowsField);
         panel.add(new JLabel("Number of columns:"));
         panel.add(colsField);
 
-        int result = JOptionPane.showConfirmDialog(this, panel, "Create new table", JOptionPane.OK_CANCEL_OPTION);
-
-        if (result == JOptionPane.OK_OPTION) {
-            try {
-                int nrows = Integer.parseInt(rowsField.getText());
-                int ncols = Integer.parseInt(colsField.getText());
-                tableModel = new FormulaTableModel(nrows, ncols);
-                table = new JTable(tableModel) {
-                    @Override
-                    public TableCellRenderer getCellRenderer(int row, int column) {
-                        return new FormulaCellRenderer();
-                    }
-
-                    @Override
-                    public TableCellEditor getCellEditor(int row, int column) {
-                        return new FormulaCellEditor();
-                    }
-
-                    @Override
-                    public boolean editCellAt(int row, int column, EventObject e) {
-                        boolean isEditable = super.editCellAt(row, column, e);
-                        if (isEditable && e instanceof MouseEvent) {
-                            ((JTextComponent) getEditorComponent()).setText(tableModel.getFormulaAt(row, column));
-                        }
-                        return isEditable;
-                    }
-                };
-
-                sheet = new ArrayList<>(rows);
-                for (int i = 0; i < rows; i++) {
-                    List<Double> innerList = new ArrayList<>(Collections.nCopies(cols, null));
-                    sheet.add(innerList);
-                }
-                tableModel.addTableModelListener(new TableModelListener() {
-                    @Override
-                    public void tableChanged(TableModelEvent e) {
-                        toSave = true;
-                        statusBar.setText("Table modified. Save to keep changes.");
-                    }
-                });
-                table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-                JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-                scrollPane.setRowHeaderView(new TableRowHeader(table));
-                displayOnFull(scrollPane);
-                toSave = true;
-                statusBar.setText("New table created with " + rowsField.getText() + " rows and " + colsField.getText() + " columns. Save to keep changes.");
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Enter valid numbers.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
-                newTable(rows, cols);
-            }
+        int result = JOptionPane.showConfirmDialog(this, panel,
+            "Create new table", JOptionPane.OK_CANCEL_OPTION);
+        if (result != JOptionPane.OK_OPTION) return;
+        if (rowsField.getText().isEmpty() || rowsField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter valid numbers.",
+                "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            newTable(rows, cols);
+            return;
         }
+
+        int nrRows = Integer.parseInt(rowsField.getText());
+        int nrCols = Integer.parseInt(colsField.getText());
+        if (nrRows <= 0 || nrCols <= 0) {
+            JOptionPane.showMessageDialog(this, "Enter positive numbers.",
+                "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            newTable(rows, cols);
+            return;
+        }
+        createTable(nrRows, nrCols);
+        toSave = true;
+        statusBar.setText("New table created with " + rowsField.getText() + " rows and " +
+            colsField.getText() + " columns. Save to keep changes.");
     }
 
     private void openTable() {
@@ -130,45 +84,24 @@ public class TableEditor extends JFrame {
         JFileChooser fileChooser = new JFileChooser();
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             currentFile = fileChooser.getSelectedFile();
-//            tableModel = new DefaultTableModel();
-//            table = new JTable(tableModel);
-//            tableModel.setRowCount(0);
-//            tableModel.setColumnCount(0);
+            try (CSVReader reader = new CSVReader(new FileReader(currentFile))) {
+                createTable(1, reader.readNext().length);
 
-//            try (CSVReader reader = new CSVReader(new FileReader(currentFile))) {
-//                String[] nextLine;
-//                boolean isFirstLine = true;
-//
-//                while ((nextLine = reader.readNext()) != null) {
-//                    if (isFirstLine) {
-//                        for (String column : nextLine) {
-//                            tableModel.addColumn(column);
-//                        }
-//                        isFirstLine = false;
-//                    } else {
-//                        tableModel.addRow(nextLine);
-//                    }
-//                }
-//
-//                int nrows = tableModel.getRowCount();
-//                int ncols = tableModel.getColumnCount();
-//
-//                sheet = new ArrayList<>(nrows);
-//                for (int i = 0; i < nrows; i++) {
-//                    sheet.add(new ArrayList<>(ncols));
-//                    for (int j = 0; j < ncols; j++) {
-//                        // ToDo
-////                        double value = Evaluator.evaluate(tableModel.getValueAt(i, j).toString(), sheet);
-////                        sheet.get(i).add(value);
-//                    }
-//                }
-//
-//                displayOnCenter(new JScrollPane(table));
-//                toSave = false;
-//                statusBar.setText("Opened successfully from " + currentFile.getAbsolutePath());
-//            } catch (IOException e) {
-//                JOptionPane.showMessageDialog(this, "Error opening file", "Error", JOptionPane.ERROR_MESSAGE);
-//            }
+                String[] nextLine;
+                while ((nextLine = reader.readNext()) != null) {
+                    tableModel.addRow();
+                    for (int i = 0; i < nextLine.length; i++) {
+                        tableModel.setValueAt(nextLine[i], tableModel.getRowCount() - 1, i);
+                    }
+                }
+
+                toSave = false;
+                statusBar.setText("Opened successfully from " + currentFile.getAbsolutePath());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,
+                    "Error opening file. Please select a valid CSV file with at least one row and one column.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -241,6 +174,19 @@ public class TableEditor extends JFrame {
         // ToDo
     }
 
+    private void createTable(int nrRows, int nrCols) {
+        tableModel = new FormulaTableModel(nrRows, nrCols);
+        table = FormulaTable.create(tableModel);
+        tableModel.addTableModelListener(e -> {
+            toSave = true;
+            statusBar.setText("Table modified. Save to keep changes.");
+        });
+
+        JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setRowHeaderView(new TableRowHeader(table));
+        displayOnFull(scrollPane);
+    }
+
     private void showSaveError() {
         JOptionPane.showMessageDialog(this, "No table to save. Create or open one first.", "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -270,8 +216,8 @@ public class TableEditor extends JFrame {
             for (int i = 0; i < tableModel.getRowCount(); i++) {
                 String[] rowData = new String[tableModel.getColumnCount()];
                 for (int j = 0; j < tableModel.getColumnCount(); j++) {
-                    Object cellValue = tableModel.getValueAt(i, j);
-                    rowData[j] = cellValue == null ? "" : cellValue.toString();
+                    Object data = tableModel.getFormulaAt(i, j);
+                    rowData[j] = data == null ? "" : data.toString();
                 }
                 writer.writeNext(rowData, false);
             }

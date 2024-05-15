@@ -2,6 +2,7 @@ package com.teoneag;
 
 import com.teoneag.parser.Node;
 import com.teoneag.parser.Parser;
+import com.teoneag.table.FormulaTableModel;
 import com.teoneag.tokenizer.Tokenizer;
 
 import java.util.List;

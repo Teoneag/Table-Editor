@@ -1,6 +1,6 @@
 package com.teoneag.parser;
 
-import com.teoneag.FormulaTableModel;
+import com.teoneag.table.FormulaTableModel;
 import com.teoneag.computables.BinaryOperator;
 import com.teoneag.computables.Computable;
 import com.teoneag.computables.NamedFunction;

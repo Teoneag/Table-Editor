@@ -1,5 +1,10 @@
 package com.teoneag;
 
+import com.teoneag.table.FormulaCellEditor;
+import com.teoneag.table.FormulaCellRenderer;
+import com.teoneag.table.FormulaTable;
+import com.teoneag.table.FormulaTableModel;
+
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -13,27 +18,7 @@ public class FormulaTableExample {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Formula Table Example");
             FormulaTableModel model = new FormulaTableModel(10, 5);
-            JTable table = new JTable(model) {
-                @Override
-                public TableCellRenderer getCellRenderer(int row, int column) {
-                    return new FormulaCellRenderer();
-                }
-
-                @Override
-                public TableCellEditor getCellEditor(int row, int column) {
-                    return new FormulaCellEditor();
-                }
-
-                @Override
-                public boolean editCellAt(int row, int column, EventObject e) {
-                    boolean isEditable = super.editCellAt(row, column, e);
-                    if (isEditable && e instanceof MouseEvent) {
-                        // Show formula in the editor
-                        ((JTextComponent) getEditorComponent()).setText(model.getFormulaAt(row, column));
-                    }
-                    return isEditable;
-                }
-            };
+            JTable table = FormulaTable.create(model);
 
             JPanel buttonPanel = new JPanel();
             JButton addRowButton = new JButton("Add Row");

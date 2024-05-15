@@ -16,9 +16,7 @@ public enum UnaryOperator implements Computable {
 
     public static UnaryOperator fromSymbol(String symbol) {
         for (UnaryOperator operator : values()) {
-            if (operator.getSymbol().equals(symbol)) {
-                return operator;
-            }
+            if (operator.getSymbol().equals(symbol)) return operator;
         }
         throw new IllegalArgumentException("Unknown unary operator: " + symbol);
     }

@@ -1,4 +1,4 @@
-package com.teoneag;
+package com.teoneag.table;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;

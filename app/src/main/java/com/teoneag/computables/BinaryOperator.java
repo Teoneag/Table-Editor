@@ -25,16 +25,14 @@ public enum BinaryOperator implements Computable {
 
     public static BinaryOperator fromSymbol(String symbol) {
         for (BinaryOperator operator : values()) {
-            if (operator.getSymbol().equals(symbol)) {
-                return operator;
-            }
+            if (operator.getSymbol().equals(symbol)) return operator;
         }
         throw new IllegalArgumentException("Unknown binary operator: " + symbol);
     }
 
     @Override
     public double compute(List<Double> args) {
-        if (args.size() != 2) throw new IllegalArgumentException("Binary operation requires exactly two arguments.");
+        if (args.size() != 2) throw new IllegalArgumentException("Binary operation requires exactly 2 arguments.");
         return operation.apply(args.get(0), args.get(1));
     }
 

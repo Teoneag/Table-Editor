@@ -153,6 +153,7 @@ Chronological order. Planned time -> actual time
   - make table full screen: 1m
   - show row numbers: 20m
     - https://stackoverflow.com/questions/64867515/how-to-add-row-header-in-table
+  - make open file work: 1:10h
 - bonus: multiple cells: 1h
 - style: 1h
 - final testing + fix todos: 1h
@@ -160,12 +161,50 @@ Chronological order. Planned time -> actual time
 
 ## ToDo
 
-- make open file work
+- if trying to open invalide file, show its contents and suggest fix
 - when editing a cell, if you click on another cell, add that string to the current cell
 - resize (add, remove cols)
 - GitHub description
 - icon
 - shortcuts (pressing esc on a cell should cancel the edit)
+- implement the following
+  - Addition (+)
+    Subtraction (-)
+    Multiplication (*)
+    Division (/)
+    Modulus (%)
+    Exponentiation (^ or **)
+    Comparison (==, !=, <, >, <=, >=)
+    Logical AND (&&)
+    Logical OR (||)
+    Unary Operators:
+
+Unary plus (+)
+Unary minus (-)
+Logical NOT (!)
+Named Functions
+Mathematical Functions:
+
+pow(base, exponent) - Raises a number to the power of another.
+sqrt(value) - Computes the square root.
+abs(value) - Returns the absolute value.
+sin(angle) - Computes the sine of an angle (in radians).
+cos(angle) - Computes the cosine of an angle (in radians).
+tan(angle) - Computes the tangent of an angle (in radians).
+log(value) - Computes the natural logarithm.
+log10(value) - Computes the base-10 logarithm.
+exp(value) - Returns e raised to the power of a number.
+Statistical Functions:
+
+min(value1, value2, ...) - Returns the minimum value.
+max(value1, value2, ...) - Returns the maximum value.
+sum(value1, value2, ...) - Returns the sum of the values.
+avg(value1, value2, ...) - Returns the average of the values.
+count(value1, value2, ...) - Returns the count of the values.
+Utility Functions:
+
+if(condition, value_if_true, value_if_false) - Returns one of two values depending on the condition.
+concat(string1, string2, ...)
 
 ### Refactor
 
