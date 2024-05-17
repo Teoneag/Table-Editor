@@ -52,31 +52,34 @@ Or you can use IntelliJ IDEA to run it. (open the project and run the TableEdito
 
 ### 3. Enjoy!
 
-<div style="font-size: 20px; color: red;">
-  <strong>⚠️ Don't forget to add <code>=</code> before the formula in the cell, just like in Excel! ⚠️</strong>
-</div>
+**⚠️ Don't forget to add <code>=</code> before the formula in the cell, just like in Excel! ⚠️**
 
 ## Features
 
-- file management
-  - create new table with custom size
-  - save table as CSV
-  - open table from CSV
-- table
-  - cells can hold
-    - normal text
-    - formulas
-      - the result of the formula is displayed
-      - just double click it to edit it and you can see the formula
-  - move columns
-- formulas
-  - Parentheses: ()
-  - Binary operators: +, -, *, /, %, ^
-  - Unary operators: - (negation)
-  - Named functions with variable nr of args: pow, sqrt, qbs, log, log10, exp, sin, cos, tan, min, max, sum, avg
-  - References to table cells: A1, ZZ3
-    - live formula update (when you change a cell, all cells that depend on it are updated)
-  - the design is very modular, so it's easy to add new functions or operators
+### File management
+
+- create new table with custom size
+- save table as CSV
+- open table from CSV
+
+### Table
+
+- cells can hold
+  - normal text
+  - formulas
+    - the result of the formula is displayed
+    - just double click it to edit it and you can see the formula
+- move, resize columns
+
+### Formulas
+
+- Parentheses: ()
+- Binary operators: +, -, *, /, %, ^
+- Unary operators: - (negation)
+- Named functions with variable nr of args: pow, sqrt, qbs, log, log10, exp, sin, cos, tan, min, max, sum, avg
+- References to table cells: A1, ZZ3
+  - live formula update (when you change a cell, all cells that depend on it are updated)
+- the design is very modular, so it's easy to add new functions or operators
 
 ## Design choices
 
