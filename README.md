@@ -172,15 +172,17 @@ Chronological order. Planned time -> actual time
     - https://stackoverflow.com/questions/64867515/how-to-add-row-header-in-table
   - make open file work: 1:10h
   - refactor: 34m
+  - fix create a new table pop up: if you change a value, and the other one is wrong, when u are asked again for the values, the good one is lost
 - bonus: multiple cells: 1h
 - style: 1h
 - final testing + fix todos: 1h
-- documentation & push: 30m
+- documentation & push: 30m -> 30m + ?
 
 ## ToDo
 
-- if trying to open invalide file, show its contents and suggest fix
 - when editing a cell, if you click on another cell, add that string to the current cell
+- todos
+- if trying to open invalide file, show its contents and suggest fix
 - resize (add, remove cols)
 - icon
 - shortcuts (pressing esc on a cell should cancel the edit)
@@ -191,5 +193,7 @@ Chronological order. Planned time -> actual time
   - Logical NOT (!)
   - if(condition, value_if_true, value_if_false) - Returns one of two values depending on the condition.
   - concat(string1, string2, ...)
-
+- select column when clicking on the name
+- find a gifrecorder that also captures the mouse
+- theme changing
 - import, export to excel

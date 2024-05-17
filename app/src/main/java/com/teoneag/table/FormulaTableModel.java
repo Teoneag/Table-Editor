@@ -4,12 +4,15 @@ import com.teoneag.formula.Evaluator;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FormulaTableModel extends AbstractTableModel {
-    private final List<List<String>> data;
     private final List<List<String>> formulas;
+    private final List<List<String>> data;
 
     public FormulaTableModel(int rows, int cols) {
         data = new ArrayList<>();
@@ -24,6 +27,15 @@ public class FormulaTableModel extends AbstractTableModel {
             data.add(dataRow);
             formulas.add(formulaRow);
         }
+    }
+
+    public static JTable createTable(FormulaTableModel model) {
+        final JTable table = new JTable(model);
+        table.setDefaultRenderer(Object.class, new ResultCellRenderer());
+        table.setDefaultEditor(Object.class, new FormulaCellEditor());
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        return table;
     }
 
     @Override
@@ -52,7 +64,6 @@ public class FormulaTableModel extends AbstractTableModel {
         for (int i = 0; i < formulas.size(); i++) {
             for (int j = 0; j < formulas.getFirst().size(); j++) {
                 if (formulas.get(i).get(j).toLowerCase().contains(cellName)) {
-                    System.out.println("Recalculating " + getCellName(i, j) + " because of " + cellName);
                     data.get(i).set(j, evaluateFormula(formulas.get(i).get(j)));
                     fireTableCellUpdated(i, j);
                 }
@@ -153,3 +164,25 @@ public class FormulaTableModel extends AbstractTableModel {
     }
 }
 
+class ResultCellRenderer extends DefaultTableCellRenderer {
+    @Override
+    protected void setValue(Object value) {
+        setText(value != null ? value.toString() : "");
+    }
+}
+
+class FormulaCellEditor extends AbstractCellEditor implements TableCellEditor {
+    private final JTextField textField = new JTextField();;
+
+    @Override
+    public Object getCellEditorValue() {
+        return textField.getText();
+    }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        FormulaTableModel model = (FormulaTableModel) table.getModel();
+        textField.setText(model.getFormulaAt(row, column));
+        return textField;
+    }
+}

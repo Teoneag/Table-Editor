@@ -2,7 +2,6 @@ package com.teoneag;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.teoneag.table.FormulaTable;
 import com.teoneag.table.FormulaTableModel;
 import com.teoneag.table.TableRowHeader;
 
@@ -23,6 +22,10 @@ public class TableEditor extends JFrame {
     private JTable table = null;
     private FormulaTableModel tableModel = null;
     private boolean toSave = false;
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new TableEditor().setVisible(true));
+    }
 
     public TableEditor() {
         setTitle("Table Editor");
@@ -55,22 +58,23 @@ public class TableEditor extends JFrame {
         int result = JOptionPane.showConfirmDialog(this, panel,
             "Create new table", JOptionPane.OK_CANCEL_OPTION);
         if (result != JOptionPane.OK_OPTION) return;
-        if (rowsField.getText().isEmpty() || rowsField.getText().isEmpty()) {
+
+        rows = parseIntOrDefault(rowsField.getText(), rows);
+        cols = parseIntOrDefault(colsField.getText(), cols);
+        if (rowsField.getText().isEmpty() || colsField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Enter valid numbers.",
                 "Invalid Input", JOptionPane.ERROR_MESSAGE);
             newTable(rows, cols);
             return;
         }
 
-        int nrRows = Integer.parseInt(rowsField.getText());
-        int nrCols = Integer.parseInt(colsField.getText());
-        if (nrRows <= 0 || nrCols <= 0) {
+        if (rows <= 0 || cols <= 0) {
             JOptionPane.showMessageDialog(this, "Enter positive numbers.",
                 "Invalid Input", JOptionPane.ERROR_MESSAGE);
             newTable(rows, cols);
             return;
         }
-        createTable(nrRows, nrCols);
+        createTable(rows, cols);
         toSave = true;
         statusBar.setText("New table created with " + rowsField.getText() + " rows and " +
             colsField.getText() + " columns. Save to keep changes.");
@@ -176,7 +180,7 @@ public class TableEditor extends JFrame {
 
     private void createTable(int nrRows, int nrCols) {
         tableModel = new FormulaTableModel(nrRows, nrCols);
-        table = FormulaTable.create(tableModel);
+        table = FormulaTableModel.createTable(tableModel);
         tableModel.addTableModelListener(e -> {
             toSave = true;
             statusBar.setText("Table modified. Save to keep changes.");
@@ -328,9 +332,11 @@ public class TableEditor extends JFrame {
         return textField;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new TableEditor().setVisible(true);
-        });
+    private int parseIntOrDefault(String text, int defaultValue) {
+        try {
+            return Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 }
