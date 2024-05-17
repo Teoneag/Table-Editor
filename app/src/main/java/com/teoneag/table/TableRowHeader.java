@@ -54,7 +54,8 @@ public class TableRowHeader extends JList<String> implements TableModelListener 
         }
 
         @Override
-        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                      boolean isSelected, boolean cellHasFocus) {
             setBackground(isSelected ? table.getSelectionBackground() : table.getTableHeader().getBackground());
             setText(value != null ? value.toString() : "");
             return this;

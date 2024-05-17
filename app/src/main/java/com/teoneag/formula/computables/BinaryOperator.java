@@ -24,6 +24,11 @@ public enum BinaryOperator implements Computable {
         this.operation = operation;
     }
 
+    /**
+     * Returns the binary operator corresponding to the given symbol.
+     * @param symbol The symbol of the operator as a string.
+     * @return The binary operator corresponding to the given symbol.
+     */
     public static BinaryOperator fromSymbol(String symbol) {
         for (BinaryOperator operator : values()) {
             if (operator.getSymbol().equals(symbol)) return operator;

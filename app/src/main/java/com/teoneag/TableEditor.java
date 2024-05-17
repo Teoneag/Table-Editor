@@ -2,6 +2,7 @@ package com.teoneag;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.teoneag.table.FormulaTable;
 import com.teoneag.table.FormulaTableModel;
 import com.teoneag.table.TableRowHeader;
 
@@ -19,7 +20,7 @@ public class TableEditor extends JFrame {
     private final JPanel mainContent = new JPanel(new BorderLayout());
     private final JLabel statusBar = new JLabel("Ready");
     private File currentFile = null;
-    private JTable table = null;
+    private FormulaTable table = null;
     private FormulaTableModel tableModel = null;
     private boolean toSave = false;
 
@@ -41,7 +42,7 @@ public class TableEditor extends JFrame {
 
     private void newTable() {
         if (toSave) {
-            if (!askSaveCurrent()) return;
+            if (askSaveCurrent()) return;
         }
         newTable(100, 100);
     }
@@ -82,7 +83,7 @@ public class TableEditor extends JFrame {
 
     private void openTable() {
         if (toSave) {
-            if (!askSaveCurrent()) return;
+            if (askSaveCurrent()) return;
         }
 
         JFileChooser fileChooser = new JFileChooser();
@@ -133,7 +134,7 @@ public class TableEditor extends JFrame {
 
     private void exit() {
         if (toSave) {
-            if (!askSaveCurrent()) return;
+            if (askSaveCurrent()) return;
         }
         System.exit(0);
     }
@@ -180,30 +181,33 @@ public class TableEditor extends JFrame {
 
     private void createTable(int nrRows, int nrCols) {
         tableModel = new FormulaTableModel(nrRows, nrCols);
-        table = FormulaTableModel.createTable(tableModel);
+        table = new FormulaTable(tableModel);
         tableModel.addTableModelListener(e -> {
             toSave = true;
             statusBar.setText("Table modified. Save to keep changes.");
         });
-        JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setRowHeaderView(new TableRowHeader(table));
         displayOnFull(scrollPane);
     }
 
     private void showSaveError() {
-        JOptionPane.showMessageDialog(this, "No table to save. Create or open one first.", "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "No table to save. Create or open one first.",
+            "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     /**
-     * @return true if cancel otherwise false
+     * @return false if cancel otherwise true
      */
     private boolean askSaveCurrent() {
-        int result = JOptionPane.showConfirmDialog(this, "Do you want to save the current table?", "Save Table", JOptionPane.YES_NO_CANCEL_OPTION);
+        int result = JOptionPane.showConfirmDialog(this,
+            "Do you want to save the current table?", "Save Table", JOptionPane.YES_NO_CANCEL_OPTION);
         if (result == JOptionPane.YES_OPTION) {
             saveTable();
-            return true;
+            return false;
         }
-        return result != JOptionPane.CANCEL_OPTION;
+        return result == JOptionPane.CANCEL_OPTION;
     }
 
     private void saveTableAsCSV() {

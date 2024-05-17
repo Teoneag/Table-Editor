@@ -29,15 +29,6 @@ public class FormulaTableModel extends AbstractTableModel {
         }
     }
 
-    public static JTable createTable(FormulaTableModel model) {
-        final JTable table = new JTable(model);
-        table.setDefaultRenderer(Object.class, new ResultCellRenderer());
-        table.setDefaultEditor(Object.class, new FormulaCellEditor());
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-        return table;
-    }
-
     @Override
     public int getRowCount() {
         return data.size();
@@ -53,6 +44,12 @@ public class FormulaTableModel extends AbstractTableModel {
         return data.get(rowIndex).get(columnIndex);
     }
 
+    /**
+     * Sets the value of a cell in the table & updates all cells that depend on it.
+     * @param aValue   value to assign to cell
+     * @param rowIndex   row of cell
+     * @param columnIndex  column of cell
+     */
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         String value = (String) aValue;
@@ -153,7 +150,7 @@ public class FormulaTableModel extends AbstractTableModel {
         return Double.parseDouble(data.get(row).get(column));
     }
 
-    private String getCellName(int row, int column) {
+    public static String getCellName(int row, int column) {
         StringBuilder cellName = new StringBuilder();
         while (column >= 0) {
             cellName.insert(0, (char) (column % 26 + 'a'));

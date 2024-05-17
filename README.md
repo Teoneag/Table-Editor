@@ -76,6 +76,7 @@ Or you can use IntelliJ IDEA to run it. (open the project and run the TableEdito
   - Named functions with variable nr of args: pow, sqrt, qbs, log, log10, exp, sin, cos, tan, min, max, sum, avg
   - References to table cells: A1, ZZ3
     - live formula update (when you change a cell, all cells that depend on it are updated)
+  - the design is very modular, so it's easy to add new functions or operators
 
 ## Design choices
 
@@ -109,12 +110,6 @@ Or you can use IntelliJ IDEA to run it. (open the project and run the TableEdito
     - See the result of any cell, when selected show the formula
     - If it's between "" it's text, otherwise it's a formula
     - If the formula is invalid, show an error message as a pop-up
-- Supported syntactic constructs:
-  - Parentheses: ()
-  - Binary operators: +, -, *, /, %, ^
-  - Unary operators: - (negation)
-  - Named functions with variable nr of args: pow, sqrt, qbs, log, log10, exp, sin, cos, tan, min, max, sum, avg
-  - References to table cells: A1, ZZ3
 - For decimal numbers use comma: 1,5
 - calculating equation
   - tokenizer
@@ -150,7 +145,7 @@ pow(-2, A1 - 3) * (42 + B2)
 - code quality (assume we will have to develop and maintain this project for a long time)
 - simple, tidy interface (not expected a particularly beautiful UI)
 
-## Plan -> Actual: 
+## Plan -> Actual: 6:24h
 
 Chronological order. Planned time -> actual time
 - read + make initial plan: 30m -> 34m
@@ -163,7 +158,7 @@ Chronological order. Planned time -> actual time
   - https://en.wikipedia.org/wiki/Shunting_yard_algorithm
   - fix comma in cell: 10m -> 20m
   - https://www.geeksforgeeks.org/expression-evaluation/
-- test, fix & write tests: 3h -> 1h + ?
+- test, fix & write tests: 3h -> 2h:38m
   - allow strings in cells, fix empty cell: 13m
   - make formulas auto update: 20m
   - not happened: fix infinite recursion if happens (a=b, b=a)
@@ -173,15 +168,15 @@ Chronological order. Planned time -> actual time
   - make open file work: 1:10h
   - refactor: 34m
   - fix create a new table pop up: if you change a value, and the other one is wrong, when u are asked again for the values, the good one is lost
-- bonus: multiple cells: 1h
-- style: 1h
-- final testing + fix todos: 1h
-- documentation & push: 30m -> 30m + ?
+  - refactor table: 1h
+- documentation & push: 30m -> 30m
 
 ## ToDo
 
+- bonus: multiple cells: 1h
+- style: 1h
+- final testing + fix todos: 1h
 - when editing a cell, if you click on another cell, add that string to the current cell
-- todos
 - if trying to open invalide file, show its contents and suggest fix
 - resize (add, remove cols)
 - icon
@@ -194,6 +189,5 @@ Chronological order. Planned time -> actual time
   - if(condition, value_if_true, value_if_false) - Returns one of two values depending on the condition.
   - concat(string1, string2, ...)
 - select column when clicking on the name
-- find a gifrecorder that also captures the mouse
 - theme changing
 - import, export to excel
