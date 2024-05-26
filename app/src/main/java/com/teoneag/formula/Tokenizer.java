@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 class Tokenizer {
     public static List<Token> tokenize(String input) {
         input = input.replaceAll("\\s+", "");
+        input = input.toLowerCase();
         List<Token> tokens = new ArrayList<>();
         int position = 0;
 

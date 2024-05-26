@@ -31,7 +31,7 @@ class TokenizerTest {
 
         List<Token> actualTokens = Tokenizer.tokenize(input);
 
-        assertEquals(expectedTokens, actualTokens);
+        assertEquals(expectedTokens.stream().map(token -> new Token(token.type(), token.value().toLowerCase())).toList(), actualTokens);
     }
 
 }

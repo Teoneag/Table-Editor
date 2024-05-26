@@ -1,4 +1,3 @@
-
 plugins {
     application
 }
@@ -23,7 +22,13 @@ java {
 }
 
 application {
-    mainClass = "com.teoneag.TableEditor"
+    mainClass = "com.teoneag.App"
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "com.teoneag.App"
+    }
 }
 
 tasks.named<Test>("test") {

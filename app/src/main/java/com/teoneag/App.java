@@ -16,7 +16,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class TableEditor extends JFrame {
+public class App extends JFrame {
     private final JPanel mainContent = new JPanel(new BorderLayout());
     private final JLabel statusBar = new JLabel("Ready");
     private File currentFile = null;
@@ -25,10 +25,10 @@ public class TableEditor extends JFrame {
     private boolean toSave = false;
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TableEditor().setVisible(true));
+        SwingUtilities.invokeLater(() -> new App().setVisible(true));
     }
 
-    public TableEditor() {
+    public App() {
         setTitle("Table Editor");
         setSize(800, 600);
         setLocationRelativeTo(null);

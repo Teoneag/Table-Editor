@@ -77,7 +77,7 @@ public class FormulaTableModel extends AbstractTableModel {
             return formula;
         }
         try {
-            return Evaluator.evaluate(formula.replace("=", "").toLowerCase(), this);
+            return Evaluator.evaluate(formula.replace("=", ""), this);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                 "Error in formula syntax. If you don't want a formula, don't start with '='.\nEvaluating this: "
