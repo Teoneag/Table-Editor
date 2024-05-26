@@ -76,7 +76,7 @@ Or you can use IntelliJ IDEA to run it. (open the project and run the App class)
 - Parentheses: ()
 - Binary operators: +, -, *, /, %, ^
 - Unary operators: - (negation)
-- Named functions with variable nr of args: pow, sqrt, qbs, log, log10, exp, sin, cos, tan, min, max, sum, avg
+- Named functions with variable nr of args: pow, sqrt, abs, log, log10, exp, sin, cos, tan, min, max, sum, avg
 - References to table cells: A1, ZZ3
   - live formula update (when you change a cell, all cells that depend on it are updated)
 - the design is very modular, so it's easy to add new functions or operators
